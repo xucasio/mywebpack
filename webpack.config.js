@@ -1,11 +1,12 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const webpack = require('webpack');
 
 
 const config = {
-    entry: path.resolve(__dirname, './src/index.js'),
+    entry: ['@babel/polyfill',path.resolve(__dirname, './src/index.js')],
     output: {
         filename: '[name].[hash:8].js',
         path: path.resolve(__dirname, './dist')
@@ -18,10 +19,15 @@ const config = {
 		new CleanWebpackPlugin(), // 打包缓存清除
 		new webpack.HotModuleReplacementPlugin({ // 热更新 似乎不用配置也可以，日了狗了
 			// Options...
-		})
+		}),
+		new VueLoaderPlugin()
 	],
 	module:{
 		rules: [{
+			test: /\.vue$/,
+			exclude: /node_modules/,
+			use: ["vue-loader"]
+		},{
 			test: /\.js$/,
 			exclude: /node_modules/,
 			use: [{
